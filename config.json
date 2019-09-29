@@ -1,0 +1,32 @@
+{
+  "ftp_configs":
+  {
+    "ip": "localhost",
+    "port": "",
+    "user": "user",
+    "password": ""
+  },
+  "files":
+  [
+    {
+      "f_name": "1.txt",
+      "p_from": "C:/test/",
+      "p_to": "1"
+    },
+    {
+      "f_name": "1.xlsx",
+      "p_from": "C:/test/new_f",
+      "p_to": "2/2,1"
+    },
+    {
+      "f_name": "pp.pptx",
+      "p_from": "C:/test/1",
+      "p_to": ""
+    },
+    {
+      "f_name": "win.rar",
+      "p_from": "C:/test/test2",
+      "p_to": "files_to1"
+    }
+  ]
+}
