@@ -3,7 +3,7 @@
   {
     "ip": "localhost",
     "port": "",
-    "user": "user",
+    "user": "anonymous",
     "password": ""
   },
   "files":
@@ -14,6 +14,26 @@
       "p_to": "1"
     },
     {
+      "f_name": "2.txt",
+      "p_from": "C:/test/",
+      "p_to": "1"
+    },
+    {
+      "f_name": "3.txt",
+      "p_from": "C:/test/",
+      "p_to": "2/2,1"
+    },
+    {
+      "f_name": "4.txt",
+      "p_from": "C:/test/",
+      "p_to": "2"
+    },
+    {
+  "f_name": "5.txt",
+  "p_from": "C:/test/",
+  "p_to": "1"
+},
+    {
       "f_name": "1.xlsx",
       "p_from": "C:/test/new_f",
       "p_to": "2/2,1"
@@ -21,6 +41,11 @@
     {
       "f_name": "pp.pptx",
       "p_from": "C:/test/1",
+      "p_to": ""
+    },
+    {
+      "f_name": "terver.pdf",
+      "p_from": "C:/test/",
       "p_to": ""
     },
     {

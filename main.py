@@ -2,7 +2,10 @@ import ftplib
 import json
 import threading
 import sys
-import os
+from multiprocessing import cpu_count
+
+# Введите путь для файла config.json
+config_path = "config.json"
 
 
 class FTP:
@@ -15,8 +18,11 @@ class FTP:
         try:
             # Пытаемся подключиться к серверу и авторизироваться
             self.serv = ftplib.FTP(ip, port)
-            self.serv.login(username, password)
-        except Exception as e:
+            if self.user == "anonymous":
+                self.serv.login(username)
+            else:
+                self.serv.login(username, password)  # Добавил отдельную конфигурацию для анонимных серверов,
+        except Exception as e:                       # но оно авторизировалось бы и без этого, если оставить поле пароля пустым
             sys.exit(e)
 
 
@@ -24,8 +30,9 @@ class Json:
     def __init__(self, filename):
         # Пытаемся открыть файл
         try:
-            with open(filename, 'r') as f:
-                self.file = json.load(f)
+            f = open(filename, 'r')
+            self.file = json.load(f)
+            f.close()
         except Exception as e:
             sys.exit(e)
 
@@ -59,8 +66,9 @@ def full_transfer(file, serv, dir):
         # sys.exit(e)
         # Хотел выйти с exit кодом 1, но те 2 строчки выше почему-то не вызываются как в остальных эсепшнах ¯\_(ツ)_/¯
 
-# Путь к конфиг файлу ↓
-data = Json("config.json")
+
+# Конфигурационный файл
+data = Json(config_path)
 
 # Получаем значения для запуска сервера (actually, I think, there is some room for improvement)
 ip = data.get_value_for_setup('ip')
@@ -84,9 +92,21 @@ try:
 except Exception:
     sys.exit("Ошибка в инициализации потоков!")
 
-# Запускаем потоки
+# Запускаем потоки (если файлов меньше кол-ва потоков на устройстве, то запускаем кол-во потоков, равное
+# кол-ву файлов; иначе - каждый раз запускаем по макс кол-ву тредов, а в конце - оставшееся
+
+cpus = cpu_count()
+upper = 0
 try:
-    for t in thrs:
-        t.start()
-except Exception:
-    sys.exit("Ошибка в запуске потоков!")
+    while upper < len(thrs):
+        lower = upper
+        if len(thrs) < cpus:
+            upper = len(thrs)
+        else:
+            upper += cpu_count()
+            cpus = cpus + cpu_count()
+        for i in range(lower, upper):
+            thrs[i].start()
+
+except Exception as e:
+    sys.exit(e)
