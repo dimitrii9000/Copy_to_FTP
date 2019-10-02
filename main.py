@@ -7,22 +7,25 @@ from multiprocessing import cpu_count
 # Введите путь для файла config.json
 config_path = "config.json"
 
+# Введите ограничение на количество потоков, заменив None (иначе используется количество доступных потоков в системе)
+cpus = None
+
 
 class FTP:
-    # Инициализируем сервер
-    def __init__(self, ip, port, username, password):
-        self.ip = ip
-        self.port = port
-        self.user = username
-        self.password = password
+    # Инициализируем сервер с информацией, получаемой из файла
+    def __init__(self, file):
+        self.ip = file.get_value_for_setup('ip')
+        self.port = file.get_value_for_setup('port')
+        self.user = file.get_value_for_setup('user')
+        self.password = file.get_value_for_setup('password')
         try:
             # Пытаемся подключиться к серверу и авторизироваться
-            self.serv = ftplib.FTP(ip, port)
+            self.serv = ftplib.FTP(self.ip, self.port)
             if self.user == "anonymous":
-                self.serv.login(username)
+                self.serv.login(self.user)
             else:
-                self.serv.login(username, password)  # Добавил отдельную конфигурацию для анонимных серверов,
-        except Exception as e:                       # но оно авторизировалось бы и без этого, если оставить поле пароля пустым
+                self.serv.login(self.user, self.password)  # Добавил отдельную конфигурацию для анонимных серверов,
+        except Exception as e:                             # но оно авторизировалось бы и без этого, если оставить поле пароля пустым
             sys.exit(e)
 
 
@@ -70,11 +73,6 @@ def full_transfer(file, serv, dir):
 # Конфигурационный файл
 data = Json(config_path)
 
-# Получаем значения для запуска сервера (actually, I think, there is some room for improvement)
-ip = data.get_value_for_setup('ip')
-port = data.get_value_for_setup('port')
-user = data.get_value_for_setup('user')
-password = data.get_value_for_setup('password')
 
 if data.files_amount() < 1:
     sys.exit("Нет файлов для копирования!")
@@ -85,8 +83,9 @@ thrs = []
 try:
     # Для каждого файла из конфига подключамся к FTP и инициализируем потоки с функцией копирования файла
     # (если подключение вынести за цикл for, то ничего работать не будет, странно)
+
     for file in data.file['files']:
-        ftp = FTP(ip, port, user, password).serv
+        ftp = FTP(data).serv
         t = threading.Thread(target=full_transfer, args=(file, ftp, ftp.pwd()))
         thrs.append(t)
 except Exception:
@@ -94,17 +93,20 @@ except Exception:
 
 # Запускаем потоки (если файлов меньше кол-ва потоков на устройстве, то запускаем кол-во потоков, равное
 # кол-ву файлов; иначе - каждый раз запускаем по макс кол-ву тредов, а в конце - оставшееся
+# Если введено ограничение на потоки - используем его; если нет - берем количество потоков в системе
 
-cpus = cpu_count()
+if cpus is None:
+    cpus = cpu_count()
+used_cpus = cpus
 upper = 0
 try:
     while upper < len(thrs):
         lower = upper
-        if len(thrs) < cpus:
+        if len(thrs) < used_cpus:
             upper = len(thrs)
         else:
-            upper += cpu_count()
-            cpus = cpus + cpu_count()
+            upper += cpus
+            used_cpus += cpus
         for i in range(lower, upper):
             thrs[i].start()
 

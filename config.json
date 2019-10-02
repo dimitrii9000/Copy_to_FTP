@@ -14,6 +14,26 @@
       "p_to": "1"
     },
     {
+      "f_name": "54.zip",
+      "p_from": "C:/test/",
+      "p_to": "1"
+    },
+    {
+      "f_name": "Worlds_0321.zip",
+      "p_from": "C:/test/",
+      "p_to": "1"
+    },
+    {
+      "f_name": "Rockstar-Games-Launcher.exe",
+      "p_from": "C:/test/",
+      "p_to": "1"
+    },
+    {
+      "f_name": "rr.exe",
+      "p_from": "C:/test/",
+      "p_to": "1"
+    },
+    {
       "f_name": "2.txt",
       "p_from": "C:/test/",
       "p_to": "1"
@@ -29,10 +49,10 @@
       "p_to": "2"
     },
     {
-  "f_name": "5.txt",
-  "p_from": "C:/test/",
-  "p_to": "1"
-},
+      "f_name": "5.txt",
+      "p_from": "C:/test/",
+      "p_to": "1"
+    },
     {
       "f_name": "1.xlsx",
       "p_from": "C:/test/new_f",
