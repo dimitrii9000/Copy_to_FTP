@@ -109,6 +109,8 @@ try:
             used_cpus += cpus
         for i in range(lower, upper):
             thrs[i].start()
+        for i in range(lower, upper):
+            thrs[i].join()
 
 except Exception as e:
     sys.exit(e)
