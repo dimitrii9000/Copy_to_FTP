@@ -1,5 +1,5 @@
 # Copy_to_FTP
-Python script that copies files according to config.json
+Скрипт python, который копирует файлы, прописанные в config.json на ftp сервер
 
 В конфигурационном файле в ftp_configs прописываются данные для подключения к FTP (тестировалось на localhost'е);
 в files добавляются примеры файлов, которые нужно копировать;
